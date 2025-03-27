@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Confirmation Dialog</title>
+<link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+</head>
+<style>/* Styles for the custom notification */
+  #custom-notification {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notification-content {
+    text-align: center;
+  }
+  
+  .notification-content p {
+    margin-bottom: 20px;
+  }
+  
+  .notification-content button {
+    margin: 0 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .notification-content button:hover {
+    background-color: #f0f0f0;
+  }
+  </style>
+<body>
+
+<!-- Anchor tag with onclick event handler -->
+<a href="https://example.com" onclick="confirmNavigation(event)">Continue to Example.com</a>
+
+<!-- Custom notification dialog -->
+<div id="custom-notification">
+  <div class="notification-content">
+    <p>Are you sure you want to continue?</p>
+    <button onclick="cancelNavigation()">Cancel</button>
+    <button onclick="continueNavigation()">Continue</button>
+  </div>
+</div>
+
+<!-- JavaScript function to handle the confirmation -->
+<script >function confirmNavigation(event) {
+  event.preventDefault(); // Prevent default anchor behavior
+
+  // Display the custom notification
+  var customNotification = document.getElementById("custom-notification");
+  customNotification.style.display = "block";
+}
+
+function cancelNavigation() {
+  // Hide the custom notification
+  var customNotification = document.getElementById("custom-notification");
+  customNotification.style.display = "none";
+}
+
+function continueNavigation() {
+  // Navigate to the URL
+  window.location.href = "https://example.com";
+}
+</script> <!-- Link to external JavaScript file -->
+
+</body>
+</html>

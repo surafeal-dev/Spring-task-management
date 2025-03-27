@@ -1,0 +1,42 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+# Define classes
+ex:User a rdfs:Class .
+ex:Team a rdfs:Class .
+ex:Task a rdfs:Class .
+ex:Project a rdfs:Class .
+ex:Member a rdfs:Class .
+
+# Define properties
+ex:hasMember a rdf:Property ;
+    rdfs:domain ex:Team ;
+    rdfs:range ex:Member .
+
+ex:assignedTo a rdf:Property ;
+    rdfs:domain ex:Task ;
+    rdfs:range ex:Member .
+
+ex:belongsTo a rdf:Property ;
+    rdfs:domain ex:Task ;
+    rdfs:range ex:Project .
+
+# Individuals
+ex:John a ex:User ;
+    ex:hasName "John Smith" .
+
+ex:Team1 a ex:Team ;
+    ex:hasName "Development Team" ;
+    ex:hasMember ex:John .
+
+ex:Task1 a ex:Task ;
+    ex:hasTitle "Implement feature X" ;
+    ex:assignedTo ex:John ;
+    ex:belongsTo ex:Project1 .
+
+ex:Project1 a ex:Project ;
+    ex:hasTitle "Project Alpha" .
+
+ex:Member1 a ex:Member ;
+    ex:hasName "Alice Johnson" .

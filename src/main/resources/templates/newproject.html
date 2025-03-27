@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Project</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .submenu {
+    display: none;
+}
+
+/* Show submenu when hovering over the parent li */
+.submenu {
+    transition-duration: 100ms;
+}
+
+.u:hover .submenu {
+    display: block;
+}
+
+.user-initial{
+    transition-duration: 100ms;
+}
+.u:hover .user-initial {
+    background-color: rgba(59,130,246,var(--tw-bg-opacity));
+    
+}
+
+.email{
+    position:relative;
+    top:-20px;
+    /* left:-8px; */
+    font-size: 10px;
+}
+.logout{
+    margin-top:-25px;
+}
+
+    </style>
+
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="header bg-blue-500 text-white text-center py-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold mx-4">XYZ Task Manager</h1>
+        <nav class="bg-white w-1/3 mx-8 pt-1 rounded-full">
+            <ul class="flex w-full justify-between">
+                <li class="text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/projects}">Projects</a></li>
+                <!-- Removed bg-black and text-white, added text-blue-500 -->
+                <li class="bg-white text-blue-500 flex-grow py-3 text-lg text-center font-bold"><a th:href="@{/projects/newproject}">New Projects</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/friends}">Friends</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="u relative flex items-center justify-center">
+                    <div th:text="${#strings.substring(session.userfullname,0,1)}" class="user-initial bg-gray-800 text-white font-bold text-lg mx-4 h-12 w-12 rounded-full flex items-center justify-center">U</div>
+                    <!-- Submenu -->
+                    <ul class="submenu absolute top-full left-1/2 transform -translate-x-1/2 mt-0 py-2 bg-white w-28 shadow-lg rounded-lg">
+                        <li class="px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-black">username</li>
+                        <li class="email px-4 py-2"><span th:text="${session.useremail}"  class="font-semibold text-blue-500">email.gmail.com</li>
+                        <li class="logout px-4 py-2 text-black hover:bg-red-600 hover:text-white "><a th:href="@{/logout}" class="font-bold">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="max-w-screen-xl mx-auto bg-white rounded p-6 shadow-md mt-8"> <!-- Adjusted max-w-md to max-w-screen-xl -->
+        <h1 class="text-xl font-bold mb-4">Create Project</h1>
+        <form th:action="@{/projects/saveproject}" class="flex flex-wrap" method="post" th:object="${project}">
+    <div class="w-full md:w-1/2 mb-4 md:pr-2">
+        <label for="type" class="block text-gray-700 font-semibold mb-2">Type</label>
+        <select id="type" name="type" th:field="*{catagory}" class="border border-gray-300 rounded px-3 py-2 w-full">
+            <option value="Individual">Individual</option>
+            <option value="Team">Team</option>
+        </select>
+    </div>
+    <div class="w-full md:w-1/2 mb-4 md:pl-2">
+        <label for="projectName" class="block text-gray-700 font-semibold mb-2">Project Name</label>
+        <input required id="projectName" th:field="*{project_name}" name="projectName" type="text" class="border border-gray-300 rounded px-3 py-2 w-full" />
+    </div>
+    <div class="flex items-center w-full mb-4">
+        <label for="teamName" class="block text-gray-700 font-semibold mr-2">Team Name</label>
+        <select id="teamName" name="teamName" th:field="*{team}" class="border border-gray-300 rounded px-3 py-2">
+            <option th:each="team : ${teamlist}"
+                    th:value="${team.team_id}"
+                    th:text="${team.team_name}"
+                    th:id="${team.team_name}">Team</option>
+        </select>
+        <a th:href="@{/team/createnewteam}"><button id="create_team" type="button" class="ml-2 bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-black hover:text-white">
+            Create Team
+        </button></a>
+    </div>
+     <div id="dueDateContainer" class="w-full mb-4">
+                <label for="dueDate" class="block text-gray-700 font-semibold mb-2">Due Date</label>
+                <input required id="dueDate" name="dueDate" th:field="*{due_date}" type="date" class="border border-gray-300 rounded px-3 py-2 w-full" />
+            </div>
+    <div id="taskInputs" class="w-full">
+        <h1 class="text-xl font-bold mb-4">Create Tasks</h1>
+        <div>
+        <label for="task1" class="block text-gray-700 font-semibold mb-2">Task 1</label>
+        <input required id="task1" name="dynamicInput" data-input-type="dynamic" type="text" class="border border-gray-300 rounded px-3 py-2 w-full" />
+        </div>
+                    
+    </div>
+    <div class="w-full mb-4 mt-4">
+        <!-- Add and remove task buttons -->
+        <button type="button" id="addTask" class="ml-2 bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-black hover:text-white">
+            Add Task
+        </button>
+        <button type="button" id="removeTask" class="ml-2 bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-black hover:text-white">
+            Remove Task
+        </button>
+    </div>
+    <!-- Submit button -->
+    <button type="submit" class="ml-2 bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-black hover:text-white">
+        Submit
+    </button>
+</form>
+
+    </div>
+
+    <div class="footer bg-blue-500 text-white text-center py-4 mt-24">
+        &copy; 2024 XYZ Task Manager. All rights reserved.
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+           const addTaskButton = document.getElementById('addTask');
+            const removeTaskButton = document.getElementById('removeTask');
+            const taskInputs = document.getElementById('taskInputs');
+            let taskCount = 1; // Initial task count
+            let taskCount1 = 0; 
+            // Function to add a new task input
+            function addTaskInput() {
+                taskCount++;
+            	const newTaskLabel = document.createElement('label');
+                const newTaskInput = document.createElement('input');
+                const newTaskDiv = document.createElement('div');
+                newTaskLabel.setAttribute("for", "task"+taskCount);
+                newTaskLabel.setAttribute("class", "block text-gray-700 font-semibold mb-2");
+                newTaskLabel.textContent="Task "+taskCount;
+                newTaskInput.setAttribute("id", "task"+taskCount);
+                newTaskInput.setAttribute("name", "dynamicInput");
+                newTaskInput.setAttribute("data-input-type","dynamic");
+                newTaskInput.setAttribute("type", "text");
+                newTaskInput.setAttribute("class", "border border-gray-300 rounded px-3 py-2 w-full");
+                newTaskInput.setAttribute("required","true");
+                
+                newTaskDiv.appendChild(newTaskLabel);
+                newTaskDiv.appendChild(newTaskInput);
+                taskInputs.appendChild(newTaskDiv)
+                taskCount1++;
+                
+            }
+
+            // Function to remove the last task input
+            function removeTaskInput() {
+                if (taskCount > 1) {
+                    const lastTaskInput = taskInputs.lastElementChild;
+                    taskInputs.removeChild(lastTaskInput);
+                    taskCount--;
+                }
+            }
+
+            // Event listener for "Add Task" button
+            addTaskButton.addEventListener('click', addTaskInput);
+
+            // Event listener for "Remove Task" button
+            removeTaskButton.addEventListener('click', removeTaskInput);
+
+            const typeSelect = document.getElementById('type');
+            const teamNameSelect = document.getElementById('teamName');
+            const create = document.getElementById('create_team');
+            const option=teamNameSelect.firstElementChild;
+            teamNameSelect.disabled = true;
+            teamNameSelect.value=null
+            teamNameSelect.className="bg-gray-200 border border-gray-300 rounded px-3 py-2";
+            create.disabled = true;
+            create.className="ml-2 bg-gray-200 text-black px-4 py-2 rounded";
+            typeSelect.addEventListener('change', function() {
+                if (typeSelect.value === 'Individual') {
+                    teamNameSelect.disabled = true;
+                    teamNameSelect.value=null
+                    teamNameSelect.className= "ml-2 bg-gray-200 text-black px-4 py-2 rounded";
+                    create.disabled = true;
+                    create.className="ml-2 bg-gray-200 text-black px-4 py-2 rounded";
+                    console.log(teamNameSelect.value);
+                } else {
+                    teamNameSelect.disabled = false;
+                    teamNameSelect.value=option.value;
+                    teamNameSelect.className= "border border-gray-300 rounded px-3 py-2";
+                    create.disabled = false;
+                    create.className="ml-2 bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-black hover:text-white";
+                    console.log(teamNameSelect.value);
+                }
+            });
+        
+            });
+       
+    </script>
+</body>
+
+</html>

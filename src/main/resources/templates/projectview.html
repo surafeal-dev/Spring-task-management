@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .submenu {
+    display: none;
+}
+
+/* Show submenu when hovering over the parent li */
+.submenu {
+    transition-duration: 100ms;
+}
+
+.u:hover .submenu {
+    display: block;
+}
+
+.user-initial{
+    transition-duration: 100ms;
+}
+.u:hover .user-initial {
+    background-color: rgba(59,130,246,var(--tw-bg-opacity));
+    
+}
+
+.email{
+    position:relative;
+    top:-20px;
+    /* left:-8px; */
+    font-size: 10px;
+}
+.logout{
+    margin-top:-25px;
+}
+
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="header bg-blue-500 text-white text-center py-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold mx-4">XYZ Task Manager</h1>
+        <nav class="bg-white w-1/3 mx-8 pt-1 rounded-full">
+            <ul class="flex w-full justify-between">
+                <li class="text-blue-500 flex-grow py-3 text-lg text-center font-bold"><a href="#">Projects</a></li> <!-- Removed bg-black and text-white, added text-blue-500 -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/projects/newproject}">New Projects</a></li> <!-- Added mx-2 for margin -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/friends}">Friends</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="u relative flex items-center justify-center">
+                    <div th:text="${#strings.substring(session.userfullname,0,1)}" class="user-initial bg-gray-800 text-white font-bold text-lg mx-4 h-12 w-12 rounded-full flex items-center justify-center">U</div>
+                    <!-- Submenu -->
+                    <ul class="submenu absolute top-full left-1/2 transform -translate-x-1/2 mt-0 py-2 bg-white w-28 shadow-lg rounded-lg">
+                        <li class="px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-black">username</li>
+                        <li class="email px-4 py-2"><span th:text="${session.useremail}"  class="font-semibold text-blue-500">email.gmail.com</li>
+                        <li class="logout px-4 py-2 text-black hover:bg-red-600 hover:text-white "><a th:href="@{/logout}" class="font-bold">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>    
+    
+<div class="w-full mx-auto px-10 mt-1">
+    <nav class="border-b-2 border-gray-300">
+        <ul class="flex w-full">
+            <li id="all_projects" class="w-1/2 py-3 border-b-2 border-blue-500 text-black text-lg text-center bg-gray-100" style="">All Projects</li></a>
+            <li id="fin_projects" class="w-1/2 py-3 text-lg text-gray-400 hover:text-black border-b-2 border-gray-100 hover:border-blue-500 text-center">Finished Projects</li>
+            <li id="unfin_projects" class="w-1/2 py-3 text-lg text-gray-400 hover:text-black border-b-2 border-gray-100 hover:border-blue-500 text-center" >Unfinished Projects</li>
+            <li id="exp_projects" class="w-1/2 py-3 text-lg text-gray-400 hover:text-black border-b-2 border-gray-100 hover:border-blue-500 text-center">Expired Projects</li>
+        </ul>
+    </nav>
+    
+    <div class="mt-8 mb-24">
+        <table class="w-full border-collapse">
+            <thead >
+                <tr >
+                    <th class="pb-4 text-lg font-bold">Status</th>
+                    <th class="pb-4 text-lg font-bold">Project Name</th>
+                    <th class="pb-4 text-lg font-bold">Category</th>
+                    <th class="pb-4 text-lg font-bold">Project Creator</th>
+                    <th class="pb-4 text-lg font-bold">Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="Project:${projectList}" th:class="${Project.project_status}+' '+'border-b-2 border-gray-300 hover:bg-gray-200'">
+                 
+                    <td th:if ="${Project.project_status.name()=='Pending'}"> 
+                    	<div th:text="${Project.project_status}" class="bg-blue-200 text-center py-2 mb-2 mt-2 rounded-full">Done</div>
+                    </td>
+                    
+                    <td th:if = "${Project.project_status.name()=='Completed'}"> 
+                    	<div th:text="${Project.project_status}" class="bg-green-200 text-center py-2 mb-2 mt-2 rounded-full">Done</div>
+                    </td>
+                    
+                    <td th:if = "${Project.project_status.name()=='Expired'}"> 
+                    	<div th:text="${Project.project_status}" class="bg-red-400 text-center py-2 mb-2 mt-2 rounded-full">Done</div>
+                    </td>
+                    <td  class="text-center py-2 px-4"> <a class="anchor hover:text-blue-500" th:text = "${Project.project_name}" th:href="@{'/projects/viewprojectandtask/'+${Project.id}}">Programming 1</a> </td>
+                    <td th:text = "${Project.catagory}" class="text-center py-2 px-4">Team</td>
+                    <td th:text = "${Project.User.getFirstname()}+' '+${Project.User.getLastname()}" class="text-center py-2 px-4">1-2-2024</td>
+               		<td th:text = "${Project.due_date}" class="text-center py-2 px-4">1-2-2024</td>
+                 
+                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="footer bg-blue-500 text-white text-center py-4">
+    &copy; 2024 XYZ Task Manager. All rights reserved.
+</div>
+
+<script type="text/javascript">
+	var originalDisplayValue;
+	var exp_projects=document.getElementById("exp_projects");
+	var fin_projects=document.getElementById("fin_projects");
+	var unfin_projects=document.getElementById("unfin_projects");
+	var all_projects=document.getElementById("all_projects");
+    originalDisplayValue= unfin_projects.style.display;
+    var nexpired=document.querySelectorAll(".Expired");
+    var npending=document.querySelectorAll(".Pending");
+    var ncompleted=document.querySelectorAll(".Completed");
+
+
+    all_projects.addEventListener("click",()=>{
+        npending.forEach(pending => {
+            pending.style.display=originalDisplayValue;
+        });
+        ncompleted.forEach(completed => {
+            completed.style.display=originalDisplayValue;
+        });
+        nexpired.forEach(expired => {
+            expired.style.display=originalDisplayValue;
+        });
+    })
+    
+    fin_projects.addEventListener("click",()=>{
+        npending.forEach(pending => {
+            pending.style.display="none";
+        });
+        ncompleted.forEach(completed => {
+            completed.style.display=originalDisplayValue;
+        });
+        nexpired.forEach(expired => {
+            expired.style.display="none";
+        });
+    })
+
+    exp_projects.addEventListener("click",()=>{
+
+        npending.forEach(pending => {
+            pending.style.display="none";
+        });
+        ncompleted.forEach(completed => {
+            completed.style.display="none";
+        });
+        nexpired.forEach(expired => {
+            expired.style.display=originalDisplayValue;
+        });
+        
+
+    })
+
+    unfin_projects.addEventListener("click",()=>{
+        npending.forEach(pending => {
+            pending.style.display=originalDisplayValue;
+        });
+        ncompleted.forEach(completed => {
+            completed.style.display="none";
+        });
+        nexpired.forEach(expired => {
+            expired.style.display="none";
+        });
+    })
+    
+    nexpired.forEach(function(row) {
+            row.addEventListener("click", function() {
+                var anchor = row.querySelector(".anchor");
+                anchor.click();
+            });
+        });
+    npending.forEach(function(row) {
+        row.addEventListener("click", function() {
+            var anchor = row.querySelector(".anchor");
+            anchor.click();
+        });
+    });
+    
+    ncompleted.forEach(function(row) {
+        row.addEventListener("click", function() {
+            var anchor = row.querySelector(".anchor");
+            anchor.click();
+        });
+    });
+
+</script>
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    
+<div class="header bg-blue-500 text-white text-center py-8">
+    <h1 class="text-3xl font-bold">XYZ Task Manager</h1>
+    <h2 class="text-lg">Your one way stop for all your project and task management needs</h2>
+</div>
+<div class="features text-center py-8">
+    <h2 class="text-xl font-bold">We provide guaranteed services such as</h2>
+</div>
+<div class="main flex justify-center p-8 grid grid-cols-3 justify-items-center">
+    
+    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-md h-64 w-64 flex flex-col items-center justify-center">
+        <div>
+            <!-- Image goes here -->
+            <img src="/icons/project-management.png" alt="Sample Image" class="w-32 h-32 rounded-md">
+        </div>
+        <div class="mt-2">
+            <!-- Text goes here -->
+            <span class="text-gray-700 font-bold">Project Management</span>
+        </div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-md h-64 w-64 flex flex-col items-center justify-center">
+        <div>
+            <!-- Image goes here -->
+            <img src="icons/team (1).png" alt="Sample Image" class="w-32 h-32 rounded-md">
+        </div>
+        <div class="mt-2">
+            <!-- Text goes here -->
+            <span class="text-gray-700 font-bold">Work in Teams</span>
+        </div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-md h-64 w-64 flex flex-col items-center justify-center">
+        <div>
+            <!-- Image goes here -->
+            <img src="icons/deadline.png" alt="Sample Image" class="w-32 h-32 rounded-md">
+        </div>
+        <div class="mt-2">
+            <!-- Text goes here -->
+            <span class="text-gray-700 font-bold">DeadLine Tracking</span>
+        </div>
+    </div>
+</div>
+<div class="links text-center py-4">
+    
+        <a th:href="@{'/signin'}" class="hover:text-white">
+        <button class="bg-blue-500 hover:bg-black text-white font-bold py-2 px-4 rounded w-40">Sign In
+        	</button>
+        </a>
+        <a th:href="@{'/createaccount'}" class="hover:text-white">
+        <button class="bg-blue-500 hover:bg-black text-white font-bold py-2 px-4 rounded w-40">Create Account
+        </button>
+        </a>
+        
+</div>
+<div class="footer bg-blue-500 text-white text-center py-4 absolute bottom-0 w-full">
+    &copy; 2024 XYZ Task Manager. All rights reserved.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Task Manager-Create Team</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<style>
+    .submenu {
+display: none;
+}
+
+/* Show submenu when hovering over the parent li */
+.submenu {
+transition-duration: 100ms;
+}
+
+.u:hover .submenu {
+display: block;
+}
+
+.user-initial{
+transition-duration: 100ms;
+}
+.u:hover .user-initial {
+background-color: rgba(59,130,246,var(--tw-bg-opacity));
+
+}
+
+.email{
+position:relative;
+top:-20px;
+/* left:-8px; */
+font-size: 10px;
+}
+.logout{
+margin-top:-25px;
+}
+
+</style>
+
+<script>
+function validateCheckboxes() {
+    // Get all checkboxes with the name "checkboxGroup"
+    var checkboxes = document.getElementsByName("member");
+    var isChecked = false;
+
+    // Loop through each checkbox to see if at least one is checked
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            isChecked = true;
+            break;
+        }
+    }
+
+    // If no checkbox is checked, show an alert
+    if (!isChecked) {
+        alert("Please select at least one team member.");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+</head>
+<body class="bg-gray-100">
+
+    <div class="header bg-blue-500 text-white text-center py-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold mx-4">XYZ Task Manager</h1>
+        <nav class="bg-white w-1/3 mx-8 pt-1 rounded-full">
+            <ul class="flex w-full justify-between">
+                <li class="text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/projects}">Projects</a></li>
+                <!-- Removed bg-black and text-white, added text-blue-500 -->
+                <li class="bg-white text-blue-500 flex-grow py-3 text-lg text-center font-bold"><a th:href="@{/projects/newproject}">New Projects</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/friends}">Friends</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="u relative flex items-center justify-center">
+                    <div th:text="${#strings.substring(session.userfullname,0,1)}" class="user-initial bg-gray-800 text-white font-bold text-lg mx-4 h-12 w-12 rounded-full flex items-center justify-center">U</div>
+                    <!-- Submenu -->
+                    <ul class="submenu absolute top-full left-1/2 transform -translate-x-1/2 mt-0 py-2 bg-white w-28 shadow-lg rounded-lg">
+                        <li class="px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-black">username</li>
+                        <li class="email px-4 py-2"><span th:text="${session.useremail}"  class="font-semibold text-blue-500">email.gmail.com</li>
+                        <li class="logout px-4 py-2 text-black hover:bg-red-600 hover:text-white "><a th:href="@{/logout}" class="font-bold">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container mx-auto px-4 py-8">
+        <form onsubmit="return validateCheckboxes()" th:action="@{/team/saveteam}" method="post" class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6" th:object="${team}">
+            <h1 class="text-2xl font-bold mb-4">Create Team</h1>
+            <div class="mb-4">
+                <label for="teamName" class="block text-gray-700 font-bold mb-2">Team Name</label>
+                <input required id="teamName" th:field="*{team_name}" type="text" class="border border-gray-300 rounded px-3 py-2 w-full" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Select members from your friends to form your team</label>
+                <div th:each="user : ${userlist}"
+                    th:id="${team.team_name}" class="flex items-center mb-2">
+                    <input th:id="${user.id}+'. '+${user.firstname}+' '+${user.lastname}" th:value="${user.id}" name="member" data-input-type="dynamic" type="checkbox" id="nathan" class="mr-2">
+                    <label th:text="${user.firstname}+' '+${user.lastname}" th:for="${user.id}+'. '+${user.firstname}+' '+${user.lastname}" class="text-gray-700 font-bold">Nathan</label>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                    Create Team
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="footer bg-blue-500 text-white text-center py-4 mt-24">
+        &copy; 2024 XYZ Task Manager. All rights reserved.
+    </div>
+    
+</body>
+</html>

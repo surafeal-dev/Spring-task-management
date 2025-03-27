@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans relative h-screen">
+    
+<div class="header bg-blue-500 text-white text-center py-8">
+    <h1 class="text-3xl font-bold">XYZ Task Manager</h1>
+    <h2 class="text-lg">Your one way stop for all your project and task management needs</h2>
+</div>
+
+<div class="max-w-md mx-auto mt-8 bg-white shadow-md rounded-md p-8 h-auto">
+    <h2 class="text-2xl font-bold mb-4 text-center">Sign In</h2>
+    <form form th:action="@{/searchforuser}" th:object="${searchuser}" method="post">
+	    <!-- Error message -->
+	    <div th:if="${param.error != null}">
+	        <p style="color: red;">Invalid email or password</p>
+	    </div>
+        <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+            <input th:field="*{email}" type="email" id="email" name="email" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+            <input th:field="*{password}" type="password" id="password" name="password" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div class="text-center mb-4">
+            <button type="submit" class="bg-blue-500 hover:bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign In</button>
+        </div>
+        <p class="text-center text-gray-600">You don't have an account. <a th:href="@{'/createaccount'}" class="text-blue-500 underline hover:text-blue-900">Click here</a> to create one.</p>
+    </form>
+</div>
+
+<div class="footer bg-blue-500 text-white text-center py-4 absolute bottom-0 w-full">
+    &copy; 2024 XYZ Task Manager. All rights reserved.
+</div>
+
+</body>
+</html>

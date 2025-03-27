@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    
+    
+<style>
+        .submenu {
+    display: none;
+}
+
+/* Show submenu when hovering over the parent li */
+.submenu {
+    transition-duration: 100ms;
+}
+
+.u:hover .submenu {
+    display: block;
+}
+
+.user-initial{
+    transition-duration: 100ms;
+}
+.u:hover .user-initial {
+    background-color: rgba(59,130,246,var(--tw-bg-opacity));
+    
+}
+
+.email{
+    position:relative;
+    top:-20px;
+    /* left:-8px; */
+    font-size: 10px;
+}
+.logout{
+    margin-top:-25px;
+}
+
+    </style>
+
+</head>
+<body class="bg-gray-100">
+
+	
+    <div class="header bg-blue-500 text-white text-center py-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold mx-4">XYZ Task Manager</h1>
+        <nav class="bg-white w-1/3 mx-8 pt-1 rounded-full">
+            <ul class="flex w-full justify-between">
+                <li class="text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/projects}">Projects</a></li>
+                <!-- Removed bg-black and text-white, added text-blue-500 -->
+                <li class="bg-white text-blue-500 flex-grow py-3 text-lg text-center font-bold"><a th:href="@{/projects/newproject}">New Projects</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/friends}">Friends</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="u relative flex items-center justify-center">
+                    <div th:text="${#strings.substring(session.userfullname,0,1)}" class="user-initial bg-gray-800 text-white font-bold text-lg mx-4 h-12 w-12 rounded-full flex items-center justify-center">U</div>
+                    <!-- Submenu -->
+                    <ul class="submenu absolute top-full left-1/2 transform -translate-x-1/2 mt-0 py-2 bg-white w-28 shadow-lg rounded-lg">
+                        <li class="px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-black">username</li>
+                        <li class="email px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-blue-500">email.gmail.com</li>
+                        <li class="logout px-4 py-2 text-black hover:bg-red-600 hover:text-white "><a th:href="@{/logout}" class="font-bold">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="container mx-auto p-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+	        <div class="flex justify-between">
+		    <h1 class="text-2xl font-bold mb-4">Project Details</h1>
+		    <div th:if="${proj.user.id}==${session.userid}" class="projecteffects flex">
+		        <label th:if="${proj.project_status.name() == 'Expired'}" class="bg-red-400 justify-center pt-1 px-4 h-8 mr-2 rounded-md">Expired projects can't be edited</label>
+		        <a th:if="${proj.project_status.name() == 'Expired'}" class="w-8 h-8">
+		            <img src="/icons/edit.png" alt="Sample Image" class="w-full h-full rounded-md">
+		        </a>
+		        <a th:if="${proj.project_status.name() != 'Expired'}" th:href="@{/projects/edit/}+${proj.id}" class=" w-8 h-8">
+		            <img src="/icons/edit.png" alt="Sample Image" class="w-full h-full rounded-md">
+		        </a>
+		        
+		        <a onclick="confirmNavigation(event)"  th:href="@{/projects/delete/}+${proj.id}" class="w-8 h-8 ml-4">
+		            <img src="/icons/delete.png" alt="Sample Image" class="w-full h-full rounded-md">
+		        </a>
+		    </div>
+		    
+		   
+		</div>
+
+            
+            <div th:if="${proj.project_status.name() == 'Expired'} " class="text-red-500 mb-4">
+                	<label>You can't make any changes to this project because the project has already expired</label>
+            </div>
+            <!-- Data pairs -->
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <p class="text-gray-600 font-semibold">Project Name:</p>
+                    <p th:text="*{proj.project_name}" class="text-gray-900">Project A</p>
+                </div>
+                
+                <div>
+                    <p class="text-gray-600 font-semibold">Project Creator:</p>
+                    <p th:text="*{proj.User.getFirstname()}+' '+*{proj.User.getLastname()}" class="text-gray-900">John Doe</p>
+                </div>
+                <div>
+                    <p class="text-gray-600 font-semibold">Due Date:</p>
+                    <p th:text="*{proj.due_date}" class="text-gray-900">January 1, 2025</p>
+                </div>
+                <div>
+                    <p class="text-gray-600 font-semibold">Project Category:</p>
+                    <p th:text="*{proj.catagory}" class="text-gray-900">Catagory</p>
+                </div>
+                <div>
+                    <p class="text-gray-600 font-semibold">Project Status:</p>
+                    <p th:text="*{proj.project_status}" class="text-gray-900">Pending</p>
+                </div>
+            </div>
+
+            <!-- Additional field for Team Name if category is Team -->
+            <div class="mt-6" th:if="${proj.catagory.name() == 'Team'}">
+                <p class="text-gray-600 font-semibold">Team Name:</p>
+                <p th:text="*{proj.Team.getTeam_name()}" class="text-gray-900">Team Awesome</p>
+            </div>
+            <form th:action="@{/projects/saveprogress/}+${proj.id}" class="mt-6" th:object="${tasks}" th:method="post">
+              <h2 class="text-xl font-bold mb-2">Tasks</h2>
+              <div th:each="task : ${tasks}" class="task-container rounded-full mb-2">
+                  <label th:if="${task.project.getProject_status().name() == 'Expired'}" class="flex items-center ml-2">
+                      <input  th:disabled="true"  name="tasks" data-input-type="dynamic" type="checkbox" th:value="${task.task_id}" th:checked="${task.status.name()=='Finished'}" class="task-checkbox mr-2">
+                      <span th:text="${task.task_description}" class="text-gray-900 text-lg"></span>
+                  </label>
+                  <label th:if="${task.project.getProject_status().name() != 'Expired'}" class="flex items-center ml-2">
+                      <input name="tasks" data-input-type="dynamic" type="checkbox" th:value="${task.task_id}" th:checked="${task.status.name()=='Finished'}" class="task-checkbox mr-2">
+                      <span th:text="${task.task_description}" class="text-gray-900 text-lg"></span>
+                  </label>
+              </div>
+              <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+        		Save Progress
+    		  </button>
+            </form>
+        </div>
+       
+    </div>
+    <div class="footer bg-blue-500 text-white text-center py-4 mt-24">
+        &copy; 2024 XYZ Task Manager. All rights reserved.
+    </div>
+    
+    <script>
+    
+    
+    // JavaScript code to update background color based on checkbox state
+    var checkboxes = document.querySelectorAll('.task-checkbox');
+
+    checkboxes.forEach(function(checkbox) {
+        var taskContainer = checkbox.closest('.task-container');
+        
+        if (checkbox.checked) {
+        	
+            taskContainer.classList.add('bg-green-200');
+        } else {
+        	
+            taskContainer.classList.add('bg-red-200');
+        }
+        
+        checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+        	taskContainer.classList.remove('bg-red-200');
+            taskContainer.classList.add('bg-green-200');
+        } else {
+        	taskContainer.classList.remove('bg-green-200');
+            taskContainer.classList.add('bg-red-200');
+        }
+        
+        
+        
+    });
+    });
+    
+    function confirmNavigation(event) {
+        // Display a confirmation dialog
+        var confirmation = confirm("Are you sure you want to continue?");
+        
+        // If user confirms, continue navigating to the URL
+        if (confirmation) {
+            return true;
+        } else {
+            // If user cancels, prevent the default action (navigation)
+            event.preventDefault();
+            return false;
+        }
+        }
+    
+    </script>
+    
+    
+</body>
+</html>
+<!-- th:checked="${task.completed}"  -->
