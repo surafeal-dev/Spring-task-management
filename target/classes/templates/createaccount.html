@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans relative h-screen">
+    
+<div class="header bg-blue-500 text-white text-center py-8">
+    <h1 class="text-3xl font-bold">XYZ Task Manager</h1>
+    <h2 class="text-lg">Your one way stop for all your project and task management needs</h2>
+</div>
+
+<div class="max-w-md mx-auto mt-8 bg-white shadow-md rounded-md p-8 h-auto">
+    <h2 class="text-2xl font-bold mb-4 text-center">Create Account</h2>
+    
+    <form th:action="@{/save}" th:object="${newuser}" method="post">
+        <div class="mb-4 flex justify-between">
+            <div class="w-1/2 mr-2">
+                <label for="firstName" class="block text-gray-700 font-bold mb-2">First Name</label>
+                <input th:field="*{firstname}" type="text" id="firstName" name="firstName" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+            </div>
+            <div class="w-1/2 ml-2">
+                <label for="lastName" class="block text-gray-700 font-bold mb-2">Last Name</label>
+                <input th:field="*{lastname}" type="text" id="lastName" name="lastName" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+            </div>
+        </div>
+        <div th:if="${param.error != null}">
+	        <p style="color: red;">Email found to be in use. Change email and try again</p>
+	    </div>
+        <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+            <input th:field="*{email}" type="email" id="email" name="email" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+            <input th:field="*{password}" type="password" id="password" name="password" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div class="mb-4">
+            <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Re-enter Password</label>
+            <input  type="password" id="confirmPassword" name="confirmPassword" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div class="text-center mb-4">
+            <button type="submit" class="bg-blue-500 hover:bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign Up</button>
+        </div>
+        <p class="text-center text-gray-600">Already have an account. <a th:href="@{'/signin'}" class="text-blue-500 underline hover:text-blue-900">Click here</a> to sign in.</p>
+    </form>
+</div>
+
+<div class="footer bg-blue-500 text-white text-center py-4 mt-8 w-full">
+    &copy; 2024 XYZ Task Manager. All rights reserved.
+</div>
+
+</body>
+</html>

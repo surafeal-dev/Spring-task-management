@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side Menu and Main Section</title>
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .submenu {
+display: none;
+}
+
+/* Show submenu when hovering over the parent li */
+.submenu {
+transition-duration: 100ms;
+}
+
+.u:hover .submenu {
+display: block;
+}
+
+.user-initial{
+transition-duration: 100ms;
+}
+.u:hover .user-initial {
+background-color: rgba(59,130,246,var(--tw-bg-opacity));
+
+}
+
+.email{
+position:relative;
+top:-20px;
+/* left:-8px; */
+font-size: 10px;
+}
+.logout{
+margin-top:-25px;
+}
+.circle {
+    width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: #3498db;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      color: white;
+      margin-right: 20px;
+    }
+
+</style>
+
+</head>
+<body class="bg-gray-100">
+    <div class="header bg-blue-500 text-white text-center py-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold mx-4">XYZ Task Manager</h1>
+        <nav class="bg-white w-1/3 mx-8 pt-1 rounded-full">
+            <ul class="flex w-full justify-between">
+                <li class="text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/projects}">Projects</a></li>
+                <!-- Removed bg-black and text-white, added text-blue-500 -->
+                <li class="bg-white text-blue-500 flex-grow py-3 text-lg text-center font-bold"><a th:href="@{/projects/newproject}">New Projects</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="bg-white text-black flex-grow py-3 text-lg text-center font-bold hover:text-blue-500 hover:text-shadow-blue"><a th:href="@{/friends/}">Friends</a></li>
+                <!-- Added mx-2 for margin -->
+                <li class="u relative flex items-center justify-center">
+                    <div th:text="${#strings.substring(session.userfullname,0,1)}" class="user-initial bg-gray-800 text-white font-bold text-lg mx-4 h-12 w-12 rounded-full flex items-center justify-center">U</div>
+                    <!-- Submenu -->
+                    <ul class="submenu absolute top-full left-1/2 transform -translate-x-1/2 mt-0 py-2 bg-white w-28 shadow-lg rounded-lg">
+                        <li class="px-4 py-2"><span th:text="${session.userfullname}" class="font-semibold text-black">username</li>
+                        <li class="email px-4 py-2"><span th:text="${session.useremail}"  class="font-semibold text-blue-500">email.gmail.com</li>
+                        <li class="logout px-4 py-2 text-black hover:bg-red-600 hover:text-white "><a th:href="@{/logout}" class="font-bold">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+  <div class="flex h-screen">
+    <!-- Side Menu -->
+    <div class="w-1/4 bg-gray-800 text-white">
+      <h2 class="text-xl font-bold mt-2 p-4 pb-0">Search User</h2>
+      <form th:action="@{/friends/search}" class="p-4" method="post">
+        <input data-input-type="dynamic" name="dynamicInput" type="text" placeholder="Search..." class="text-black border border-gray-400 rounded px-4 py-2 w-full mb-4">
+        <button class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+      </form>
+      <div class="bg-gray-300 mt-4 p-4 ml-10 w-3/4">
+        <h3 class="text-lg text-black font-semibold">Friends</h3>
+         <div th:each="friend : ${friends}" class="flex">
+        <a class="w-2/3" th:href="@{/friends/viewprofile/}+${friend.id}" >
+            <div th:text="${friend.firstname}+' '+${friend.lastname}" class="bg-blue-500 mt-2 p-2">David Lain</div>
+        	
+        </a>
+        <a  th:href="@{/friends/delete/}+*{friend.id}">
+        <div class="bg-red-400 mt-2 p-2 text-black rounded">unfollow</div>
+        </a>
+        </div>
+       
+    </div>     
+    </div>
+
+    <!-- Main Section -->
+    <div class="w-3/4 bg-white">
+        <h2 class="text-xl font-bold p-4 ml-16"></h2>
+        <div class="flex ml-12">
+            <div id="textDiv" th:text="*{suser.firstname}" class="circle">U</div>
+            <div class="p-4 mt-8">
+            
+                <p th:text="*{suser.firstname}+' '+*{suser.lastname}" class="font-semibold text-lg mt-4">John Doe</p>
+                
+                <p th:text="*{suser.email}" class="text-gray-500">john.doe@example.com</p>
+                <a th:href="@{/friends/sendrequest/}+*{suser.id}"><button class="p-2 mt-4 bg-green-200">+ Add Friend</button></a>
+            </div>
+        </div>
+        
+  </div>
+<script>
+        // Get the div element
+        const textDiv = document.getElementById('textDiv');
+        // Get the content of the div
+        const text = textDiv.textContent;
+        // Set the content of the div to only the first letter
+        textDiv.textContent = text.charAt(0);
+    </script>
+</body>
+</html>
