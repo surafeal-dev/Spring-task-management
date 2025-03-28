@@ -82,10 +82,4 @@ public void checkDeadlines() {
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License**.
-
----
-
 ### 💡 Built with ❤️ using Spring Boot & MySQL 🚀
